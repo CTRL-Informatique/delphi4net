@@ -1,2 +1,2 @@
-# delphi4net
-A simple framework to easily use delphi code from a .net application
+# D4Net
+Framework for easy use of delphi code in a .net app

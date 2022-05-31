@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{6C180100-50A2-4320-8DAE-C2B9C522C20C}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="d4netlib.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="d4netlib">
+        <MSBuild Projects="d4netlib.dproj"/>
+    </Target>
+    <Target Name="d4netlib:Clean">
+        <MSBuild Projects="d4netlib.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="d4netlib:Make">
+        <MSBuild Projects="d4netlib.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="d4netlib"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="d4netlib:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="d4netlib:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

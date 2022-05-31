@@ -1,0 +1,3 @@
+[submodule "Delphi/lib/delphi-neon"]
+	path = Delphi/lib/delphi-neon
+	url = https://github.com/paolo-rossi/delphi-neon.git
