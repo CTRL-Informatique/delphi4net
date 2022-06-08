@@ -7,6 +7,8 @@ uses
   d4net.ServiceBase, d4net.Logging, d4net.Json, d4net.Types;
 
 type
+   IDispatcher = d4net.Types.IDispatcher;
+
    TDispatcher = class abstract(TInterfacedObject)
    strict private
       class constructor CreateClass;
@@ -35,6 +37,9 @@ type
       procedure DispatchRequest(AServiceName, AMethodName, AContextInfo, ARequestData: string; ASuccessProc,
           AErrorProc: TResultProc);
    end;
+
+var
+   OnCreateDispatcher: TFunc<IDispatcher>;
 
 implementation
 

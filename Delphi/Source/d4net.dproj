@@ -5,7 +5,7 @@
         <FrameworkType>None</FrameworkType>
         <MainSource>d4net.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Library</AppType>
@@ -113,7 +113,7 @@
         <DCCReference Include="d4net.ServiceBase.pas"/>
         <DCCReference Include="d4net.Logging.Default.pas"/>
         <DCCReference Include="d4net.Rtti.pas"/>
-        <DCCReference Include="d4net.Execute.pas"/>
+        <DCCReference Include="d4net.Exported.pas"/>
         <DCCReference Include="d4net.Types.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

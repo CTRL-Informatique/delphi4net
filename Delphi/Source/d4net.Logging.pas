@@ -31,15 +31,8 @@ type
       class procedure Debug(AMessage: string);
       class property LogProc: TLogProc read FLogProc write FLogProc;
    end;
-  
-procedure SetLogProc(AProc: TLogProc); stdcall; export;
 
 implementation
-
-procedure SetLogProc(AProc: TLogProc); stdcall; export;
-begin
-   TLog.LogProc := AProc;
-end;
 
 { TLog }
 

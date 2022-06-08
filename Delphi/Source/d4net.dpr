@@ -21,7 +21,7 @@ uses
   d4net.ServiceBase in 'd4net.ServiceBase.pas',
   d4net.Logging.Default in 'd4net.Logging.Default.pas',
   d4net.Rtti in 'd4net.Rtti.pas',
-  d4net.Execute in 'd4net.Execute.pas',
+  d4net.Exported in 'd4net.Exported.pas',
   d4net.Types in 'd4net.Types.pas';
 
 {$R *.res}
