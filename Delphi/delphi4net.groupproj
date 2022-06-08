@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{6C180100-50A2-4320-8DAE-C2B9C522C20C}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Source\d4net.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Example\Example.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="d4net">
+        <MSBuild Projects="Source\d4net.dproj"/>
+    </Target>
+    <Target Name="d4net:Clean">
+        <MSBuild Projects="Source\d4net.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="d4net:Make">
+        <MSBuild Projects="Source\d4net.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Example">
+        <MSBuild Projects="Example\Example.dproj"/>
+    </Target>
+    <Target Name="Example:Clean">
+        <MSBuild Projects="Example\Example.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Example:Make">
+        <MSBuild Projects="Example\Example.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="d4net;Example"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="d4net:Clean;Example:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="d4net:Make;Example:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

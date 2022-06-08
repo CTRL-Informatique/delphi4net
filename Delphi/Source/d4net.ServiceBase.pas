@@ -11,7 +11,7 @@ type
 
    TServiceBase = class abstract;
    
-   TServiceBase<T: class, constructor> = class abstract (TServiceBase)
+   TServiceBase<T: class, constructor> = class abstract(TServiceBase)
    strict private
       FContext: T;
    strict protected
@@ -24,6 +24,8 @@ type
   TServiceClass = class of TServiceBase;
 
 implementation
+
+{ TServiceBase<T> }
 
 constructor TServiceBase<T>.Create(AContext: T);
 begin

@@ -1,4 +1,4 @@
-library d4netlib;
+library Example;
 
 { Important note about DLL memory management: ShareMem must be the
   first unit in your library's USES clause AND your project's (select
@@ -16,23 +16,27 @@ uses
   System.TypInfo,
   Neon.Core.Persistence,
   Neon.Core.Types,
-  d4net.Dispatcher in 'd4net.Dispatcher.pas',
-  d4net.Json.Neon in 'd4net.Json.Neon.pas',
-  d4net.Json in 'd4net.Json.pas',
-  d4net.Logging in 'd4net.Logging.pas',
-  d4net.ServiceBase in 'd4net.ServiceBase.pas',
-  d4net.Logging.Default in 'd4net.Logging.Default.pas',
-  d4net.Rtti in 'd4net.Rtti.pas';
+  d4net.Execute,
+  d4net.Dispatcher,
+  d4net.Json.Neon,
+  d4net.Logging.Default,
+  d4net.Types;
 
 {$R *.res}
 
 begin
-   Dispatcher := TDispatcher<TObject>.Create(
-      TNeonSerializer.Create(
-         TNeonConfiguration.Default
-            .SetMemberCase(TNeonCase.PascalCase)
-            .SetMembers([TNeonMembers.Fields])
-            .SetIgnoreFieldPrefix(True)
-            .SetVisibility([mvPrivate])),
-      TDefaultLogger.Create);
+   IsMultiThread := True;
+
+   OnCreateDispatcher :=
+      function: IDispatcher
+      begin
+         TDispatcher<TObject>.Create(
+            TNeonSerializer.Create(
+               TNeonConfiguration.Default
+                  .SetMemberCase(TNeonCase.PascalCase)
+                  .SetMembers([TNeonMembers.Fields])
+                  .SetIgnoreFieldPrefix(True)
+                  .SetVisibility([mvPrivate])),
+            TDefaultLogger.Create);
+      end;
 end.
