@@ -9,6 +9,12 @@
         <Projects Include="Example\Example.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Source\d4net.DebugUI.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Example\ExampleDebugUI.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +41,32 @@
     <Target Name="Example:Make">
         <MSBuild Projects="Example\Example.dproj" Targets="Make"/>
     </Target>
+    <Target Name="d4net_DebugUI">
+        <MSBuild Projects="Source\d4net.DebugUI.dproj"/>
+    </Target>
+    <Target Name="d4net_DebugUI:Clean">
+        <MSBuild Projects="Source\d4net.DebugUI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="d4net_DebugUI:Make">
+        <MSBuild Projects="Source\d4net.DebugUI.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ExampleDebugUI">
+        <MSBuild Projects="Example\ExampleDebugUI.dproj"/>
+    </Target>
+    <Target Name="ExampleDebugUI:Clean">
+        <MSBuild Projects="Example\ExampleDebugUI.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ExampleDebugUI:Make">
+        <MSBuild Projects="Example\ExampleDebugUI.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="d4net;Example"/>
+        <CallTarget Targets="d4net;Example;d4net_DebugUI;ExampleDebugUI"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="d4net:Clean;Example:Clean"/>
+        <CallTarget Targets="d4net:Clean;Example:Clean;d4net_DebugUI:Clean;ExampleDebugUI:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="d4net:Make;Example:Make"/>
+        <CallTarget Targets="d4net:Make;Example:Make;d4net_DebugUI:Make;ExampleDebugUI:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

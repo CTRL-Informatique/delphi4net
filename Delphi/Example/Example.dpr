@@ -1,5 +1,7 @@
 library Example;
 
+{$STRONGLINKTYPES ON}
+
 { Important note about DLL memory management: ShareMem must be the
   first unit in your library's USES clause AND your project's (select
   Project-View Source) USES clause if your DLL exports any procedures or
@@ -16,13 +18,18 @@ uses
   System.TypInfo,
   Neon.Core.Persistence,
   Neon.Core.Types,
-  d4net.Execute,
+  d4net.Exported,
   d4net.Dispatcher,
   d4net.Json.Neon,
   d4net.Logging.Default,
-  d4net.Types;
+  d4net.Types,
+  AwesomeService in 'AwesomeService.pas',
+  AwesomeContext in 'AwesomeContext.pas';
 
 {$R *.res}
+
+exports
+   d4net.Exported.Execute;
 
 begin
    IsMultiThread := True;
@@ -30,7 +37,7 @@ begin
    OnCreateDispatcher :=
       function: IDispatcher
       begin
-         TDispatcher<TObject>.Create(
+         Result := TDispatcher<TObject>.Create(
             TNeonSerializer.Create(
                TNeonConfiguration.Default
                   .SetMemberCase(TNeonCase.PascalCase)

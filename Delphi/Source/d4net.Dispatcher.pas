@@ -224,6 +224,7 @@ begin
       begin
          LRequestData := Instantiate(TRttiInstanceType(LMethodParams[0].ParamType).MetaClassType);
          FJsonSerializer.Deserialize(ARequestData, LRequestData);
+         LInvokeArgs[0] := LRequestData;
       end;
 
       if LMethod.ReturnType <> nil then
