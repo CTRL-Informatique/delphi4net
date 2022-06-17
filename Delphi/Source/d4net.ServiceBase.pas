@@ -17,7 +17,6 @@ type
    strict protected
       property Context: T read FContext;
    public
-      constructor Create(AContext: T);
       destructor Destroy; override;
    end;
 
@@ -26,12 +25,6 @@ type
 implementation
 
 { TServiceBase<T> }
-
-constructor TServiceBase<T>.Create(AContext: T);
-begin
-   inherited Create;
-   FContext := AContext;
-end;
 
 destructor TServiceBase<T>.Destroy;
 begin

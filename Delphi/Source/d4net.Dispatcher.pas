@@ -82,7 +82,14 @@ begin
          raise;
       end;
 
-      LServiceInstance := TServiceBase(Instantiate(LServiceClass, [TValue.From<T>(LContext)]));
+      LServiceInstance := TServiceBase(Instantiate(LServiceClass));
+
+      with TRttiContext.Create do
+      try
+         GetType(LServiceInstance.ClassType).GetField('FContext').SetValue(LServiceInstance, LContext);
+      finally
+         Free;
+      end;
 
       try
          BeforeRequest(LContext);
