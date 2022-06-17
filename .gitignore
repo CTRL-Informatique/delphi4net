@@ -355,3 +355,4 @@ MigrationBackup/
 *.stat
 *.tvsconfig
 *.~dsk
+/Delphi/Source/Win32
