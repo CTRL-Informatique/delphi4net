@@ -61,7 +61,7 @@ procedure HandleResult(AResult: WideString); stdcall;
 var
   DebugUIForm: TDebugUIForm;
   JsonSerializer: IJsonSerializer;
-  OnGetContextClass: TFunc<TClass>;
+  ContextClass: TClass;
 
 implementation
 
@@ -144,7 +144,7 @@ begin
    begin
       LContextInstance := GetContextClass.Create;
       try
-         MemoContext.Text := JsonSerializer.Serialize(LContextInstance);
+         MemoContext.Text := FormatJson(JsonSerializer.Serialize(LContextInstance));
       finally
          LContextInstance.Free;
       end;
@@ -157,8 +157,8 @@ end;
 
 function TDebugUIForm.GetContextClass: TClass;
 begin
-   if Assigned(OnGetContextClass) then
-      Result := OnGetContextClass()
+   if Assigned(ContextClass) then
+      Result := ContextClass
    else
       Result := TObject;
 end;

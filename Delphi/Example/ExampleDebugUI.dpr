@@ -24,11 +24,7 @@ begin
          .SetIgnoreFieldPrefix(True)
          .SetVisibility([mvPrivate]));
 
-   OnGetContextClass :=
-      function: TClass
-      begin
-         Result := TAwesomeContext;
-      end;
+   ContextClass := TAwesomeContext;
 
    OnCreateDispatcher :=
       function: IDispatcher
