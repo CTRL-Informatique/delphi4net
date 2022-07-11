@@ -24,12 +24,16 @@ begin
          .SetIgnoreFieldPrefix(True)
          .SetVisibility([mvPrivate]));
 
-   OnGetContextClass := function: TClass begin Result := TAwesomeContext; end;
+   OnGetContextClass :=
+      function: TClass
+      begin
+         Result := TAwesomeContext;
+      end;
 
    OnCreateDispatcher :=
       function: IDispatcher
       begin
-         Result := TDispatcher<TObject>.Create(JsonSerializer, TDefaultLogger.Create);
+         Result := TDispatcher<TAwesomeContext>.Create(JsonSerializer, TDefaultLogger.Create);
       end;
 
   Application.Initialize;

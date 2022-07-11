@@ -57,7 +57,6 @@ type
   end;
 
 procedure HandleResult(AResult: WideString); stdcall;
-function FormatJson(AJson: string): string;
 
 var
   DebugUIForm: TDebugUIForm;
@@ -71,14 +70,6 @@ uses
 
 {$R *.dfm}
 
-procedure HandleResult(AResult: WideString);
-begin
-   if AResult <> '' then
-      DebugUIForm.MemoResponse.Text := FormatJson(AResult)
-   else
-      DebugUIForm.MemoResponse.Clear;
-end;
-
 function FormatJson(AJson: string): string;
 var
    LJson: TJsonValue;
@@ -90,6 +81,14 @@ begin
    finally
       LJson.Free;
    end;
+end;
+
+procedure HandleResult(AResult: WideString);
+begin
+   if AResult <> '' then
+      DebugUIForm.MemoResponse.Text := FormatJson(AResult)
+   else
+      DebugUIForm.MemoResponse.Clear;
 end;
 
 destructor TDebugUIForm.Destroy;
