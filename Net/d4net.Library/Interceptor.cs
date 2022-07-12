@@ -1,6 +1,4 @@
 ﻿using Castle.DynamicProxy;
-using Smigg.Api.Common.Exceptions;
-using Smigg.Common;
 using System.Reflection;
 
 namespace d4net.Library;
@@ -9,23 +7,23 @@ namespace d4net.Library;
 
 public class Interceptor : AsyncInterceptorBase
 {
-    private readonly IGateway _gateway;
+    private readonly IDllGateway _gateway;
     private readonly IJsonSerializer _jsonSerializer;
     private readonly IContextProvider _contextProvider;
 
-    public Interceptor(IGateway gateway, IApiJsonSerializer jsonSerializer,
-        ISmiggContextProvider smiggContextProvider) {
+    public Interceptor(IDllGateway gateway, IJsonSerializer jsonSerializer,
+        IContextProvider contextProvider) {
         _gateway = gateway;
         _jsonSerializer = jsonSerializer;
-        _contextProvider = smiggContextProvider;
+        _contextProvider = contextProvider;
     }
 
     protected override async Task InterceptAsync(IInvocation invocation,
         IInvocationProceedInfo proceedInfo, Func<IInvocation, IInvocationProceedInfo, Task> proceed) {
         var endpointInfo = GetEndpointInfo(invocation);
-        var contextInfo = await _contextProvider.GetContextInfo();
+        var contextInfo = await _contextProvider.GetContextAsync();
         var requestData = GetRequestData(invocation);
-        var response = await _gateway.ExecuteRequest(endpointInfo, contextInfo, requestData);
+        var response = await _gateway.CallEndpoint(endpointInfo, contextInfo, requestData);
         ValidateResponse(response);
     }
 
@@ -34,7 +32,7 @@ public class Interceptor : AsyncInterceptorBase
         var endpointInfo = GetEndpointInfo(invocation);
         var contextInfo = await _contextProvider.GetContextAsync();
         var requestData = GetRequestData(invocation);
-        var response = await _gateway.ExecuteRequest(endpointInfo, contextInfo, requestData);
+        var response = await _gateway.CallEndpoint(endpointInfo, contextInfo, requestData);
         ValidateResponse(response);
         var result = _jsonSerializer.Deserialize<TResult>(response.Data!);
 
@@ -55,7 +53,7 @@ public class Interceptor : AsyncInterceptorBase
 
         if (serviceName == null)
             throw new Exception(
-                $"Il manque l'attribut {typeof(ServiceNameAttribute)} sur le type { type }");
+                $"{typeof(ServiceNameAttribute)} missing on type {type}");
 
         var methodName = invocation.Method
             .GetCustomAttribute<MethodNameAttribute>()?.Name ?? invocation.Method.Name;
