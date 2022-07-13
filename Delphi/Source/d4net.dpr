@@ -19,10 +19,9 @@ uses
   d4net.Json in 'd4net.Json.pas',
   d4net.Logging in 'd4net.Logging.pas',
   d4net.ServiceBase in 'd4net.ServiceBase.pas',
-  d4net.Logging.Default in 'd4net.Logging.Default.pas',
   d4net.Rtti in 'd4net.Rtti.pas',
-  d4net.Exported in 'd4net.Exported.pas',
-  d4net.Types in 'd4net.Types.pas';
+  d4net.ExportedMethods in 'd4net.ExportedMethods.pas',
+  d4net.DebugUI.Form in 'd4net.DebugUI.Form.pas' {DebugUIForm};
 
 {$R *.res}
 

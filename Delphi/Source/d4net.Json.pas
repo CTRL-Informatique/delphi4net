@@ -13,6 +13,9 @@ type
     procedure Deserialize(AJson: string; AObject: TObject);
   end;
 
+var
+   JsonSerializer: IJsonSerializer;
+
 implementation
 
 end.

@@ -11,26 +11,13 @@ uses
   AwesomeService,
   AwesomeContext,
   d4net.Dispatcher,
-  d4net.Logging.Default,
   d4net.DebugUI.Form;
 
 {$R *.res}
 
 begin
-  JsonSerializer := TNeonSerializer.Create(
-      TNeonConfiguration.Default
-         .SetMemberCase(TNeonCase.PascalCase)
-         .SetMembers([TNeonMembers.Fields])
-         .SetIgnoreFieldPrefix(True)
-         .SetVisibility([mvPrivate]));
-
    ContextClass := TAwesomeContext;
-
-   OnCreateDispatcher :=
-      function: IDispatcher
-      begin
-         Result := TDispatcher<TAwesomeContext>.Create(JsonSerializer, TDefaultLogger.Create);
-      end;
+   Dispatcher := TDispatcher<TAwesomeContext>.Create;
 
   Application.Initialize;
   Application.MainFormOnTaskbar := True;

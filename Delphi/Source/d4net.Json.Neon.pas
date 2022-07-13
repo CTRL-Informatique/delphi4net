@@ -45,4 +45,12 @@ begin
    Result := TNeon.ObjectToJSON(AObject, FConfig);
 end;
 
+initialization
+   JsonSerializer := TNeonSerializer.Create(
+      TNeonConfiguration.Default
+         .SetMemberCase(TNeonCase.PascalCase)
+         .SetMembers([TNeonMembers.Fields])
+         .SetIgnoreFieldPrefix(True)
+         .SetVisibility([mvPrivate]));
+
 end.

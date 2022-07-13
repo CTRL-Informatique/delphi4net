@@ -4,18 +4,33 @@ interface
 
 uses
   System.SysUtils, System.Generics.Collections, System.Rtti,
-  d4net.ServiceBase, d4net.Logging, d4net.Json, d4net.Types;
+  d4net.ServiceBase, d4net.Logging, d4net.Json;
 
 type
-   IDispatcher = d4net.Types.IDispatcher;
+   TResultProc = procedure(AResponse: WideString) stdcall;
+
+   IDispatcher = interface
+   ['{5F6F7525-3D84-4BCD-96CE-83F43EAD9410}']
+      procedure DispatchRequest(AServiceName, AMethodName, AContextInfo, ARequestData: string; ASuccessProc,
+          AErrorProc: TResultProc);
+   end;
+
+   TErrorInfo = class
+   strict private
+      FErrorType: string;
+      FErrorMessage: string;
+      FErrorStackTrace: string;
+   public
+      property ErrorType: string read FErrorType write FErrorType;
+      property ErrorMessage: string read FErrorMessage write FErrorMessage;
+      property ErrorStackTrace: string read FErrorStackTrace write FErrorStackTrace;
+   end;
 
    TDispatcher = class abstract(TInterfacedObject)
    strict private
       class constructor CreateClass;
       class destructor DestroyClass;
    strict protected
-      FLogger: ILogger;
-      FJsonSerializer: IJsonSerializer;
       class var FServiceClasses: TDictionary<string, TServiceClass>;
       class function Instantiate(AClass: TClass; AArgs: TArray<TValue> = []): TObject;
       class procedure RegisterServiceClasses;
@@ -23,7 +38,6 @@ type
       procedure HandleException(AException: Exception; out AResponseData: string);
       procedure Invoke(AServiceInstance: TServiceBase; AMethodName, ARequestData: string; out AResponseData: string);
    public
-      constructor Create(AJsonSerializer: IJsonSerializer; ALogger: ILogger);
       class function GetRequestDataClass(AServiceName, AMethodName: string): TClass;
       class function ListMethodNames(AServiceName: string): TArray<string>;
       class function ListServiceNames: TArray<string>;
@@ -38,15 +52,30 @@ type
           AErrorProc: TResultProc);
    end;
 
+   EServiceNotFound = class(Exception)
+   public
+      constructor Create(AClassName: string); reintroduce;
+   end;
+
+   EMethodNotFound = class(Exception)
+   public
+      constructor Create(AMethodName: string); reintroduce;
+   end;
+
+   EInvalidMethodSignature = class(Exception)
+   public
+      constructor Create(AReason: string); reintroduce;
+   end;
+
 var
-   OnCreateDispatcher: TFunc<IDispatcher>;
+   Dispatcher: IDispatcher;
 
 implementation
 
 uses
   d4net.Rtti;
 
-{ TDispatcher<T> }
+{ TDispatcher<TContext> }
 
 procedure TDispatcher<TContext>.AfterRequest;
 begin
@@ -64,10 +93,12 @@ var
    LContext: TContext;
    LResponseData: string;
 begin
-   FLogger.Info('Processing request: ServiceName=' + AServiceName + ' MethodName=' + AMethodName +
+   LResponseData := '';
+
+   Logger.Info('Processing request: ServiceName=' + AServiceName + ' MethodName=' + AMethodName +
       ' AContextInfo=' + AContextInfo);
 
-   FLogger.Debug('RequestData=' + ARequestData);
+   Logger.Debug('RequestData=' + ARequestData);
 
    try
       if not FServiceClasses.TryGetValue(AServiceName, LServiceClass) then
@@ -76,7 +107,7 @@ begin
       LContext := TContext.Create;
 
       try
-         FJsonSerializer.Deserialize(AContextInfo, LContext);
+         JsonSerializer.Deserialize(AContextInfo, LContext);
       except
          LContext.Free;
          raise;
@@ -97,20 +128,25 @@ begin
          try
             Invoke(LServiceInstance, AMethodName, ARequestData, LResponseData);
          finally
-            AfterRequest;
+            try
+               AfterRequest;
+            except
+               on E: Exception do
+                  Logger.Error(E);
+            end;
          end;
       finally
          LServiceInstance.Free;
       end;
 
-      FLogger.Debug('ResponseData=' + LResponseData);
+      Logger.Debug('ResponseData=' + LResponseData);
 
       if Assigned(ASuccessProc) then
       try
          ASuccessProc(LResponseData);
       except
          on E: Exception do
-            FLogger.Error('Success proc invocation failed: ' + e.ToString);
+            Logger.Error('Success proc invocation failed: ' + e.ToString);
       end;
    except
       on e: Exception do
@@ -122,18 +158,10 @@ begin
             AErrorProc(LResponseData);
          except
             on e: Exception do
-               FLogger.Error('Error proc invocation failed: ' + e.ToString);
+               Logger.Error('Error proc invocation failed: ' + e.ToString);
          end;
       end;
    end;
-end;
-
-{ TDispatcher }
-
-constructor TDispatcher.Create(AJsonSerializer: IJsonSerializer; ALogger: ILogger);
-begin
-  FJsonSerializer := AJsonSerializer;
-  FLogger := ALogger;
 end;
 
 class constructor TDispatcher.CreateClass;
@@ -171,14 +199,13 @@ procedure TDispatcher.HandleException(AException: Exception; out AResponseData: 
 var
    LError: TErrorInfo;
 begin
-   FLogger.Error(AException);
    LError := TErrorInfo.Create;
 
    try
-      LError.ErrorType := AException.ClassName;
+      LError.ErrorType := AException.QualifiedClassName;
       LError.ErrorMessage := AException.Message;
       LError.ErrorStackTrace := AException.StackTrace;
-      AResponseData := FJsonSerializer.Serialize(LError);
+      AResponseData := JsonSerializer.Serialize(LError);
    finally
       LError.Free;
    end;
@@ -223,14 +250,14 @@ begin
       if Length(LMethodParams) > 0 then
       begin
          LRequestData := Instantiate(TRttiInstanceType(LMethodParams[0].ParamType).MetaClassType);
-         FJsonSerializer.Deserialize(ARequestData, LRequestData);
+         JsonSerializer.Deserialize(ARequestData, LRequestData);
          LInvokeArgs[0] := LRequestData;
       end;
 
       if LMethod.ReturnType <> nil then
       begin
          LResponseData := LMethod.Invoke(AServiceInstance, LInvokeArgs).AsObject;
-         AResponseData := FJsonSerializer.Serialize(LResponseData);
+         AResponseData := JsonSerializer.Serialize(LResponseData);
       end
       else
          LMethod.Invoke(AServiceInstance, LInvokeArgs);
@@ -322,6 +349,28 @@ begin
 
    if Length(AMethod.GetParameters) > 1 then
       raise EInvalidMethodSignature.Create('Method must not have more than 1 parameter');
+end;
+
+{ EServiceNotFound }
+
+constructor EServiceNotFound.Create(AClassName: string);
+begin
+   inherited Create('No registered service class for name ' + AClassName.QuotedString +
+      '. Use [RegisterService] or make sure the service name is correct.');
+end;
+
+{ EMethodNotFound }
+
+constructor EMethodNotFound.Create(AMethodName: string);
+begin
+   inherited Create('The specified class has no method ' + AMethodName.QuotedString);
+end;
+
+{ EInvalidMethodSignature }
+
+constructor EInvalidMethodSignature.Create(AReason: string);
+begin
+   inherited Create('Invalid method signature: ' + AReason);
 end;
 
 end.

@@ -1,9 +1,9 @@
-unit d4net.Exported;
+unit d4net.ExportedMethods;
 
 interface
 
 uses
-  d4net.Types, d4net.Dispatcher, System.SysUtils, d4net.Logging;
+  d4net.Dispatcher, System.SysUtils, d4net.Logging;
 
 procedure Execute(AServiceName, AMethodName, AContextInfo, ARequestData: WideString; ASuccessProc,
    AErrorProc: TResultProc); stdcall; export;
@@ -14,16 +14,13 @@ implementation
 
 procedure SetLogProc(AProc: TLogProc); stdcall; export;
 begin
-   TLog.LogProc := AProc;
+   LogProc := AProc;
 end;
 
 procedure Execute(AServiceName, AMethodName, AContextInfo, ARequestData: WideString; ASuccessProc,
    AErrorProc: TResultProc);
-var
-   LDispatcher: IDispatcher;
 begin
-   LDispatcher := OnCreateDispatcher();
-   LDispatcher.DispatchRequest(AServiceName, AMethodName, AContextInfo, ARequestData, ASuccessProc, AErrorProc);
+   Dispatcher.DispatchRequest(AServiceName, AMethodName, AContextInfo, ARequestData, ASuccessProc, AErrorProc);
 end;
 
 end.

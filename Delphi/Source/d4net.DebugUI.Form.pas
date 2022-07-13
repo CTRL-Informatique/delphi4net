@@ -60,13 +60,12 @@ procedure HandleResult(AResult: WideString); stdcall;
 
 var
   DebugUIForm: TDebugUIForm;
-  JsonSerializer: IJsonSerializer;
   ContextClass: TClass;
 
 implementation
 
 uses
-  d4net.Dispatcher, System.Rtti, REST.Json, System.JSON, System.IOUtils, d4net.Exported;
+  d4net.Dispatcher, System.Rtti, REST.Json, System.JSON, System.IOUtils, d4net.ExportedMethods;
 
 {$R *.dfm}
 

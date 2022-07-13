@@ -18,32 +18,19 @@ uses
   System.TypInfo,
   Neon.Core.Persistence,
   Neon.Core.Types,
-  d4net.Exported,
+  d4net.ExportedMethods,
   d4net.Dispatcher,
   d4net.Json.Neon,
-  d4net.Logging.Default,
-  d4net.Types,
   AwesomeService in 'AwesomeService.pas',
   AwesomeContext in 'AwesomeContext.pas';
 
 {$R *.res}
 
 exports
-   d4net.Exported.Execute;
+   d4net.ExportedMethods.Execute,
+   d4net.ExportedMethods.SetLogProc;
 
 begin
    IsMultiThread := True;
-
-   OnCreateDispatcher :=
-      function: IDispatcher
-      begin
-         Result := TDispatcher<TObject>.Create(
-            TNeonSerializer.Create(
-               TNeonConfiguration.Default
-                  .SetMemberCase(TNeonCase.PascalCase)
-                  .SetMembers([TNeonMembers.Fields])
-                  .SetIgnoreFieldPrefix(True)
-                  .SetVisibility([mvPrivate])),
-            TDefaultLogger.Create);
-      end;
+   Dispatcher := TDispatcher<TAwesomeContext>.Create;
 end.
