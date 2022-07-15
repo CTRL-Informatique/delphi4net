@@ -6,13 +6,13 @@
         <Projects Include="Source\d4net.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Tests\d4net.Tests.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Example\Example.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="Example\ExampleDebugUI.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="Tests\d4net.Tests.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -32,6 +32,15 @@
     <Target Name="d4net:Make">
         <MSBuild Projects="Source\d4net.dproj" Targets="Make"/>
     </Target>
+    <Target Name="d4net_Tests">
+        <MSBuild Projects="Tests\d4net.Tests.dproj"/>
+    </Target>
+    <Target Name="d4net_Tests:Clean">
+        <MSBuild Projects="Tests\d4net.Tests.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="d4net_Tests:Make">
+        <MSBuild Projects="Tests\d4net.Tests.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Example">
         <MSBuild Projects="Example\Example.dproj"/>
     </Target>
@@ -50,23 +59,14 @@
     <Target Name="ExampleDebugUI:Make">
         <MSBuild Projects="Example\ExampleDebugUI.dproj" Targets="Make"/>
     </Target>
-    <Target Name="d4net_Tests">
-        <MSBuild Projects="Tests\d4net.Tests.dproj"/>
-    </Target>
-    <Target Name="d4net_Tests:Clean">
-        <MSBuild Projects="Tests\d4net.Tests.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="d4net_Tests:Make">
-        <MSBuild Projects="Tests\d4net.Tests.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="d4net;Example;ExampleDebugUI;d4net_Tests"/>
+        <CallTarget Targets="d4net;d4net_Tests;Example;ExampleDebugUI"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="d4net:Clean;Example:Clean;ExampleDebugUI:Clean;d4net_Tests:Clean"/>
+        <CallTarget Targets="d4net:Clean;d4net_Tests:Clean;Example:Clean;ExampleDebugUI:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="d4net:Make;Example:Make;ExampleDebugUI:Make;d4net_Tests:Make"/>
+        <CallTarget Targets="d4net:Make;d4net_Tests:Make;Example:Make;ExampleDebugUI:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

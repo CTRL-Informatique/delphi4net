@@ -1,4 +1,4 @@
-﻿namespace d4net.Library;
+﻿namespace d4net;
 
 public class DeserializationException : Exception
 {

@@ -20,6 +20,7 @@ uses
   Neon.Core.Types,
   d4net.ExportedMethods,
   d4net.Dispatcher,
+  //include this to use the default JsonSerializer
   d4net.Json.Neon,
   AwesomeService in 'AwesomeService.pas',
   AwesomeContext in 'AwesomeContext.pas';
