@@ -60,7 +60,6 @@ procedure HandleResult(AResult: WideString); stdcall;
 
 var
   DebugUIForm: TDebugUIForm;
-  ContextClass: TClass;
 
 implementation
 
@@ -156,10 +155,7 @@ end;
 
 function TDebugUIForm.GetContextClass: TClass;
 begin
-   if Assigned(ContextClass) then
-      Result := ContextClass
-   else
-      Result := TObject;
+   Result := Dispatcher.ContextClass;
 end;
 
 procedure TDebugUIForm.ActionSaveAsExecute(Sender: TObject);

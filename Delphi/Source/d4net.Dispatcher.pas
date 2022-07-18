@@ -13,6 +13,8 @@ type
    ['{5F6F7525-3D84-4BCD-96CE-83F43EAD9410}']
       procedure DispatchRequest(AServiceName, AMethodName, AContextInfo, ARequestData: string; ASuccessProc,
           AErrorProc: TResultProc);
+      function GetContextClass: TClass;
+      property ContextClass: TClass read GetContextClass;
    end;
 
    TErrorInfo = class
@@ -44,6 +46,8 @@ type
    end;
 
    TDispatcher<TContext: class, constructor> = class(TDispatcher, IDispatcher)
+   strict private
+      function GetContextClass: TClass;
    strict protected
       procedure AfterRequest; virtual;
       procedure BeforeRequest(AContext: TContext); virtual;
@@ -162,6 +166,11 @@ begin
          end;
       end;
    end;
+end;
+
+function TDispatcher<TContext>.GetContextClass: TClass;
+begin
+   Result := TContext;
 end;
 
 class constructor TDispatcher.CreateClass;

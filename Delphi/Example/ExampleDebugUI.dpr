@@ -16,7 +16,6 @@ uses
 {$R *.res}
 
 begin
-   ContextClass := TAwesomeContext;
    Dispatcher := TDispatcher<TAwesomeContext>.Create;
 
   Application.Initialize;
