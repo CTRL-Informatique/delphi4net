@@ -16,21 +16,21 @@ namespace d4net
 
         [TestMethod]
         public void ShouldRegisterDefaultGateway() {
-            _serviceCollection.AddDelphi4Net().AddDelphiDll<FakeDelphiDll_1>("");
+            _serviceCollection.AddDelphi4Net().AddDlls(dlls => dlls.Add<FakeDelphiDll_1>(""));
             _serviceProvider = _serviceCollection.BuildServiceProvider();
             _serviceProvider.GetRequiredService<IGateway>().Should().BeOfType<DefaultGateway>();
         }
 
         [TestMethod]
         public void ShouldRegisterDefaultJsonSerializer() {
-            _serviceCollection.AddDelphi4Net().AddDelphiDll<FakeDelphiDll_1>("");
+            _serviceCollection.AddDelphi4Net().AddDlls(dlls => dlls.Add<FakeDelphiDll_1>(""));
             _serviceProvider = _serviceCollection.BuildServiceProvider();
             _serviceProvider.GetRequiredService<IJsonSerializer>().Should().BeOfType<DefaultJsonSerializer>();
         }
 
         [TestMethod]
         public void ShouldRegisterDefaultContextProvider() {
-            _serviceCollection.AddDelphi4Net().AddDelphiDll<FakeDelphiDll_1>("");
+            _serviceCollection.AddDelphi4Net().AddDlls(dlls => dlls.Add<FakeDelphiDll_1>(""));
             _serviceProvider = _serviceCollection.BuildServiceProvider();
             _serviceProvider.GetRequiredService<IContextProvider>().Should().BeOfType<DefaultContextProvider>();
         }

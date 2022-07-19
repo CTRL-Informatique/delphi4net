@@ -2,7 +2,7 @@
 
 public class DefaultGateway : GatewayBase
 {
-    public DefaultGateway(IDelphiDllResolver delphiDllResolver, IJsonSerializer jsonSerializer) :
+    public DefaultGateway(IDllResolver delphiDllResolver, IJsonSerializer jsonSerializer) :
         base(delphiDllResolver, jsonSerializer) {
     }
 

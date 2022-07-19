@@ -2,10 +2,10 @@
 
 public abstract class GatewayBase : IGateway
 {
-    protected IDelphiDllResolver DllResolver { get; }
+    protected IDllResolver DllResolver { get; }
     protected IJsonSerializer JsonSerializer { get; }
 
-    protected GatewayBase(IDelphiDllResolver delphiDllResolver, IJsonSerializer jsonSerializer) {
+    protected GatewayBase(IDllResolver delphiDllResolver, IJsonSerializer jsonSerializer) {
         DllResolver = delphiDllResolver;
         JsonSerializer = jsonSerializer;
     }

@@ -1,10 +1,10 @@
 ﻿namespace d4net;
 
-internal class DelphiDllCollection
+internal class DllCollection
 {
     private readonly Dictionary<string, Type> _dlls = new();
 
-    public void Add<T>(string identifier) where T : IDelphiDll {
+    public void Add<T>(string identifier) where T : IDllWrapper {
         _dlls.Add(identifier, typeof(T));
     }
 

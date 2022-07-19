@@ -26,7 +26,7 @@ namespace d4net
             _serviceCollection.AddDelphi4Net()
                 .UseGateway<FakeGateway>()
                 .UseContextProvider<FakeContextProvider>()
-                .AddDelphiService<IDelphiService>();
+                .AddDllServices(services => services.Add<IDelphiService>());
 
             _serviceProvider = _serviceCollection.BuildServiceProvider();
             _delphiService = _serviceProvider.GetRequiredService<IDelphiService>();
@@ -39,7 +39,7 @@ namespace d4net
         public async Task ShouldCallGatewayWithTheRightDllName() {
             _serviceCollection.AddDelphi4Net()
                 .UseGateway<FakeGateway>()
-                .AddDelphiService<IDelphiService>();
+                .AddDllServices(services => services.Add<IDelphiService>());
 
             _serviceProvider = _serviceCollection.BuildServiceProvider();
             var delphiService = _serviceProvider.GetRequiredService<IDelphiService>();

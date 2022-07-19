@@ -5,26 +5,26 @@ namespace d4net;
 
 internal class D4NetBuilder : ID4NetBuilder
 {
-    private readonly DelphiDllCollection _dllCollection;
     private readonly IServiceCollection _serviceCollection;
 
-    public D4NetBuilder(IServiceCollection serviceCollection, DelphiDllCollection dllCollection) {
+    public D4NetBuilder(IServiceCollection serviceCollection) {
         _serviceCollection = serviceCollection;
-        _dllCollection = dllCollection;
     }
 
-    public ID4NetBuilder AddDelphiDll<T>(string name) where T : class, IDelphiDll {
-        _dllCollection.Add<T>(name);
-        _serviceCollection.AddSingleton<T>();
+    public ID4NetBuilder AddDlls(Action<IDllCollectionBuilder> action) {
+        var dllCollection = new DllCollection();
+        _serviceCollection.AddSingleton(dllCollection);
+        _serviceCollection.AddSingleton<IDllResolver, DllResolver>();
+        var builder = new DllCollectionBuilder(dllCollection, _serviceCollection);
+        action.Invoke(builder);
         return this;
     }
 
-    public ID4NetBuilder AddDelphiService<T>() where T : class {
-        _serviceCollection.AddSingleton(serviceProvider => {
-            var proxyGenerator = serviceProvider.GetRequiredService<ProxyGenerator>();
-            var interceptor = serviceProvider.GetRequiredService<Interceptor>();
-            return proxyGenerator.CreateInterfaceProxyWithoutTarget<T>(interceptor.ToInterceptor());
-        });
+    public ID4NetBuilder AddDllServices(Action<IDllServiceCollectionBuilder> action) {
+        _serviceCollection.AddSingleton<ProxyGenerator>();
+        _serviceCollection.AddSingleton<Interceptor>();
+        var builder = new DllServiceCollectionBuilder(_serviceCollection);
+        action.Invoke(builder);
         return this;
     }
 

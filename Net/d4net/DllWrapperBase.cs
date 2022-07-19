@@ -13,11 +13,11 @@ public delegate void LogAction(ushort level, [MarshalAs(UnmanagedType.BStr)] str
 
 public delegate void ResultAction([MarshalAs(UnmanagedType.BStr)] string result);
 
-public abstract class DelphiDllWrapperBase : IDelphiDll
+public abstract class DllWrapperBase : IDllWrapper
 {
     private LogAction _logAction;
 
-    protected DelphiDllWrapperBase() {
+    protected DllWrapperBase() {
         // Need to keep a reference to the delegates or they get garbage collected
         _logAction = Log;
         InvokeSetLogProc(_logAction);
