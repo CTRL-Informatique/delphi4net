@@ -76,4 +76,10 @@ public class Interceptor : AsyncInterceptorBase
 
         return dllName;
     }
+
+    protected virtual void Log(EndpointInfo endpointInfo, object contextInfo, string? requestData) {
+    }
+
+    protected virtual void Log(Response response) {
+    }
 }
