@@ -23,7 +23,7 @@ public abstract class DelphiDllWrapperBase : IDelphiDll
         InvokeSetLogProc(_logAction);
     }
 
-    public void Execute(EndpointInfo endpointInfo, string? contextInfo,
+    public virtual void Execute(EndpointInfo endpointInfo, string? contextInfo,
         string? requestData, Action<string?> successAction, Action<string?> errorAction) {
         void OnSuccess(string data) {
             successAction(data == "" ? null : data);
