@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\d4net.Library\d4net.Library.csproj" />
+    <ProjectReference Include="..\d4net\d4net.csproj" />
   </ItemGroup>
 
 </Project>
