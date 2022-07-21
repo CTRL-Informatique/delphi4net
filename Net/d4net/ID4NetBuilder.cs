@@ -2,13 +2,13 @@
 
 public interface ID4NetBuilder
 {
-    ID4NetBuilder UseGateway<T>() where T : class, IGateway;
+    ID4NetBuilder AddDll<T>() where T : class, IDllWrapper;
 
-    ID4NetBuilder UseJsonSerializer<T>() where T : class, IJsonSerializer;
+    ID4NetBuilder AddRequestHandler<TIntf, TImpl>()
+        where TIntf : class, IRequestHandler
+        where TImpl : class, TIntf;
 
     ID4NetBuilder UseContextProvider<T>() where T : class, IContextProvider;
 
-    ID4NetBuilder AddDlls(Action<IDllCollectionBuilder> action);
-
-    ID4NetBuilder AddDllServices(Action<IDllServiceCollectionBuilder> action);
+    ID4NetBuilder UseJsonSerializer<T>() where T : class, IJsonSerializer;
 }

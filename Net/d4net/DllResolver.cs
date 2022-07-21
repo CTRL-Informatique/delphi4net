@@ -2,19 +2,15 @@
 
 namespace d4net;
 
-internal class DllResolver : IDllResolver
+public class DllResolver
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly DllCollection _delphiDllCollection;
 
-    public DllResolver(IServiceProvider serviceProvider, DllCollection delphiDllCollection) {
+    public DllResolver(IServiceProvider serviceProvider) {
         _serviceProvider = serviceProvider;
-        _delphiDllCollection = delphiDllCollection;
     }
 
-    public IDllWrapper Resolve(string identifier) {
-        var type = _delphiDllCollection.Get(identifier);
-        var dll = _serviceProvider.GetRequiredService(type);
-        return (IDllWrapper)dll;
+    public IDllWrapper Resolve(string name) {
+        return _serviceProvider.GetServices<IDllWrapper>().Single(x => x.Name == name);
     }
 }

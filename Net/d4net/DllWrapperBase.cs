@@ -5,6 +5,7 @@ These methods can't be in the base class because the name of the dll file will v
 another.
 */
 
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace d4net;
@@ -22,6 +23,8 @@ public abstract class DllWrapperBase : IDllWrapper
         _logAction = Log;
         InvokeSetLogProc(_logAction);
     }
+
+    public string Name => GetType().GetCustomAttribute<DllNameAttribute>()?.Value ?? "";
 
     public virtual void Execute(EndpointInfo endpointInfo, string? contextInfo,
         string? requestData, Action<string?> successAction, Action<string?> errorAction) {
