@@ -17,7 +17,9 @@ public abstract class RequestHandlerBase : IRequestHandler
         var endpointInfo = GetEndpointInfo(request.GetType());
         var contextInfo = await _contextProvider.GetContextAsync();
         var requestData = JsonSerializer.Serialize(request);
+        Log(endpointInfo, contextInfo, requestData);
         var response = await CallEndpoint(GetDllName(), endpointInfo, contextInfo, requestData);
+        Log(response);
         ValidateResponse(response);
     }
 
@@ -25,7 +27,9 @@ public abstract class RequestHandlerBase : IRequestHandler
         var endpointInfo = GetEndpointInfo(request.GetType());
         var contextInfo = await _contextProvider.GetContextAsync();
         var requestData = JsonSerializer.Serialize(request);
+        Log(endpointInfo, contextInfo, requestData);
         var response = await CallEndpoint(GetDllName(), endpointInfo, contextInfo, requestData);
+        Log(response);
         ValidateResponse(response);
         var result = JsonSerializer.Deserialize<T>(response.Data!);
 
