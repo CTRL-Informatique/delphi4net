@@ -2,33 +2,33 @@
 
 namespace d4net;
 
-public abstract class RequestHandlerBase : IRequestHandler
+public abstract class RequestSenderBase : IRequestSender
 {
     private readonly IContextProvider _contextProvider;
 
     protected IJsonSerializer JsonSerializer { get; }
 
-    public RequestHandlerBase(IContextProvider contextProvider, IJsonSerializer jsonSerializer) {
+    public RequestSenderBase(IContextProvider contextProvider, IJsonSerializer jsonSerializer) {
         _contextProvider = contextProvider;
         JsonSerializer = jsonSerializer;
     }
 
-    public async Task HandleAsync(IRequest request) {
+    public async Task Send(IRequest request, string dllName) {
         var endpointInfo = GetEndpointInfo(request.GetType());
         var contextInfo = await _contextProvider.GetContextAsync();
         var requestData = JsonSerializer.Serialize(request);
         Log(endpointInfo, contextInfo, requestData);
-        var response = await CallEndpoint(GetDllName(), endpointInfo, contextInfo, requestData);
+        var response = await CallEndpoint(dllName, endpointInfo, contextInfo, requestData);
         Log(response);
         ValidateResponse(response);
     }
 
-    public async Task<T> HandleAsync<T>(IRequest<T> request) where T : class {
+    public async Task<T> Send<T>(IRequest<T> request, string dllName) where T : class {
         var endpointInfo = GetEndpointInfo(request.GetType());
         var contextInfo = await _contextProvider.GetContextAsync();
         var requestData = JsonSerializer.Serialize(request);
         Log(endpointInfo, contextInfo, requestData);
-        var response = await CallEndpoint(GetDllName(), endpointInfo, contextInfo, requestData);
+        var response = await CallEndpoint(dllName, endpointInfo, contextInfo, requestData);
         Log(response);
         ValidateResponse(response);
         var result = JsonSerializer.Deserialize<T>(response.Data!);
@@ -50,10 +50,6 @@ public abstract class RequestHandlerBase : IRequestHandler
     private static void ValidateResponse(Response response) {
         if (!response.IsSuccess)
             throw new ResponseException(response.ErrorInfo!);
-    }
-
-    private string GetDllName() {
-        return GetType().GetCustomAttribute<DllNameAttribute>()?.Value ?? "";
     }
 
     private EndpointInfo GetEndpointInfo(Type type) {
