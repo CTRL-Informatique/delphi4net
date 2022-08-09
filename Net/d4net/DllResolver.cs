@@ -11,6 +11,11 @@ public class DllResolver
     }
 
     public IDllWrapper Resolve(string name) {
-        return _serviceProvider.GetServices<IDllWrapper>().Single(x => x.Name == name);
+        var dll = _serviceProvider.GetServices<IDllWrapper>().SingleOrDefault(x => x.Name == name);
+
+        if (dll == null)
+            throw new Exception($"No DLL with name '{name}'");
+
+        return dll;
     }
 }
