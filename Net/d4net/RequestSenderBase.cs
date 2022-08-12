@@ -16,6 +16,7 @@ public abstract class RequestSenderBase : IRequestSender
     public async Task Send(IRequest request, string dllName) {
         var endpointInfo = GetEndpointInfo(request.GetType());
         var contextInfo = await _contextProvider.GetContextAsync();
+        OnGetContextInfo(contextInfo, dllName);
         var requestData = JsonSerializer.Serialize(request);
         Log(endpointInfo, contextInfo, requestData);
         var response = await CallEndpoint(dllName, endpointInfo, contextInfo, requestData);
@@ -26,6 +27,7 @@ public abstract class RequestSenderBase : IRequestSender
     public async Task<T> Send<T>(IRequest<T> request, string dllName) where T : class {
         var endpointInfo = GetEndpointInfo(request.GetType());
         var contextInfo = await _contextProvider.GetContextAsync();
+        OnGetContextInfo(contextInfo, dllName);
         var requestData = JsonSerializer.Serialize(request);
         Log(endpointInfo, contextInfo, requestData);
         var response = await CallEndpoint(dllName, endpointInfo, contextInfo, requestData);
@@ -59,5 +61,8 @@ public abstract class RequestSenderBase : IRequestSender
             throw new Exception($"{typeof(EndpointAttribute)} missing on type {type}");
 
         return new() { MethodName = attr.Method, ServiceName = attr.Service };
+    }
+
+    protected virtual void OnGetContextInfo(object contextInfo, string dllName) {
     }
 }

@@ -62,9 +62,12 @@ public abstract class DllWrapperBase : IDllWrapper
                 Log(LogLevel.Info, message);
                 break;
 
-            default:
-                Log(LogLevel.Error, message);
+            case 3:
+                Log(LogLevel.Debug, message);
                 break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(level));
         }
     }
 }
