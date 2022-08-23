@@ -35,8 +35,23 @@ var
 
 implementation
 
-const
-   Tag = '[D4NET]';
+uses
+  Winapi.Windows;
+
+function GetDllPath: String;
+var
+  mNam: array[0..MAX_PATH] of char;
+  aNam: Integer;
+begin
+  FillChar(mNam, sizeof(mNam), #0);
+  aNam := GetModuleFileName(hInstance, mNam, sizeof(mNam));
+  Result := Copy(mNam, 0, aNam);
+end;
+
+function GetDllName: string;
+begin
+   Result := ExtractFileName(GetDllPath);
+end;
 
 { TLogger }
 
@@ -64,7 +79,7 @@ class procedure TLogger.Log(ALevel: TLogLevel; AMessage: string);
 begin
    if Assigned(LogProc) then
    try
-      LogProc(Ord(ALevel), Tag + ' ' + AMessage);
+      LogProc(Ord(ALevel), '[' + GetDllName + '] ' + AMessage);
    except
    end;
 end;
