@@ -1,6 +1,6 @@
 ﻿namespace d4net;
 
-public class DefaultRequestHandler : RequestHandlerBase
+public class DefaultRequestHandler : RequestSenderBase
 {
     private DllResolver _dllResolver;
 

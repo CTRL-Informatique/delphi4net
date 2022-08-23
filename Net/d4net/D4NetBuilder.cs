@@ -11,12 +11,12 @@ internal class D4NetBuilder : ID4NetBuilder
     }
 
     public ID4NetBuilder AddDll<T>() where T : class, IDllWrapper {
-        _serviceCollection.AddSingleton<T>();
+        _serviceCollection.AddSingleton<IDllWrapper, T>();
         return this;
     }
 
-    public ID4NetBuilder AddRequestHandler<TIntf, TImpl>() where TIntf : class, IRequestHandler where TImpl : class, TIntf {
-        _serviceCollection.AddScoped<TIntf, TImpl>();
+    public ID4NetBuilder AddRequestSender<T>() where T : class, IRequestSender {
+        _serviceCollection.AddScoped<IRequestSender, T>();
         return this;
     }
 

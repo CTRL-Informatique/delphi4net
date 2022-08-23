@@ -4,9 +4,7 @@ public interface ID4NetBuilder
 {
     ID4NetBuilder AddDll<T>() where T : class, IDllWrapper;
 
-    ID4NetBuilder AddRequestHandler<TIntf, TImpl>()
-        where TIntf : class, IRequestHandler
-        where TImpl : class, TIntf;
+    ID4NetBuilder AddRequestSender<T>() where T : class, IRequestSender;
 
     ID4NetBuilder UseContextProvider<T>() where T : class, IContextProvider;
 
