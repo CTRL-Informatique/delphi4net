@@ -39,6 +39,7 @@ type
       class procedure ValidateSignature(AMethod: TRttiMethod);
       procedure HandleException(AException: Exception; out AResponseData: string);
       procedure Invoke(AServiceInstance: TServiceBase; AMethodName, ARequestData: string; out AResponseData: string);
+      procedure OnExceptionHandled(AException: Exception; AErrorInfo: TErrorInfo); virtual;
    public
       class function GetRequestDataClass(AServiceName, AMethodName: string): TClass;
       class function ListMethodNames(AServiceName: string): TArray<string>;
@@ -214,6 +215,7 @@ begin
       LError.ErrorType := AException.QualifiedClassName;
       LError.ErrorMessage := AException.Message;
       LError.ErrorStackTrace := AException.StackTrace;
+      OnExceptionHandled(AException, LError);
       AResponseData := JsonSerializer.Serialize(LError);
    finally
       LError.Free;
@@ -311,6 +313,11 @@ end;
 class function TDispatcher.ListServiceNames: TArray<string>;
 begin
    Result := FServiceClasses.Keys.ToArray;
+end;
+
+procedure TDispatcher.OnExceptionHandled(AException: Exception; AErrorInfo: TErrorInfo);
+begin
+
 end;
 
 class procedure TDispatcher.RegisterServiceClasses;
