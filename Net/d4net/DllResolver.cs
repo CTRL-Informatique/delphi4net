@@ -11,6 +11,8 @@ public class DllResolver
     }
 
     public IDllWrapper Resolve(string name) {
+        // on utilise ServiceProvider pour pas que les dlls soient loadés quand le service est instancié sinon
+        // ça bloque le thread
         var dll = _serviceProvider.GetServices<IDllWrapper>().SingleOrDefault(x => x.Name == name);
 
         if (dll == null)
